@@ -1,0 +1,27 @@
+.dash-page { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.dash-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.metric-card { background: #f9f9f8; border-radius: 8px; padding: 12px 14px; }
+.metric-label { font-size: 12px; color: #888; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+.metric-label i { font-size: 13px; }
+.metric-val { font-size: 22px; font-weight: 600; color: #1a1a18; }
+.dash-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dash-card { background: #fff; border: 1px solid #e8e8e5; border-radius: 10px; padding: 1rem 1.25rem; }
+.dash-card-title { font-size: 13px; font-weight: 500; color: #1a1a18; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+.dash-card-title i { font-size: 14px; color: #1D9E75; }
+.cat-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+.cat-legend span { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #666; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+.tc-tag { background: #E1F5EE; color: #085041; border-radius: 20px; font-weight: 500; }
+.tc-tag small { opacity: .6; font-weight: 400; }
+.mood-row { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; }
+.mood-row i { font-size: 15px; color: #1D9E75; width: 20px; }
+.mood-lbl { font-size: 12px; color: #666; width: 28px; }
+.mood-bar { flex: 1; background: #f4f4f2; border-radius: 4px; height: 8px; overflow: hidden; }
+.mood-fill { height: 100%; background: #1D9E75; border-radius: 4px; }
+.mood-n { font-size: 12px; color: #aaa; width: 20px; }
+.kb-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.kb-bar-lbl { font-size: 12px; color: #666; width: 36px; text-align: right; }
+.kb-bar { flex: 1; background: #f4f4f2; border-radius: 4px; height: 10px; overflow: hidden; }
+.kb-bar-fill { height: 100%; background: #1D9E75; border-radius: 4px; }
+.kb-bar-n { font-size: 12px; color: #aaa; width: 20px; }
