@@ -9,7 +9,6 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Le
 export default function DashPage({ entries, kb }) {
   const stats = useMemo(() => {
     const now = new Date();
-    // REMOVED: thisMonth
     let streak = 0;
     for (let i = 0; i < 60; i++) { const d = new Date(now); d.setDate(d.getDate() - i); const k = dateKey(d.getFullYear(), d.getMonth(), d.getDate()); if (entries.some(e => e.date === k)) streak++; else break; }
     const tagCount = {};
