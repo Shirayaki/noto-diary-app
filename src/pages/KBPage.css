@@ -8,3 +8,50 @@
 .kb-item-footer { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .kb-item-link { font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 3px; }
 .kb-item-link i { font-size: 11px; }
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .kb-list {
+    padding: 1rem 0.75rem;
+    gap: 8px;
+  }
+  
+  .kb-item {
+    padding: 11px 12px;
+    border-radius: 8px;
+  }
+  
+  .kb-item-title {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  
+  .kb-item-body {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .kb-page {
+    padding: 0.5rem;
+  }
+  
+  .kb-topbar {
+    padding: 0.75rem 0.5rem;
+    flex-direction: column;
+  }
+  
+  .kb-list {
+    padding: 0.5rem 0;
+    gap: 6px;
+  }
+  
+  .kb-item {
+    background: #f9f9f8;
+    border: 1px solid #e8e8e5;
+    border-radius: 6px;
+    padding: 9px 10px;
+  }
+  
+  .kb-item-title {
+    font-size: 12px;
