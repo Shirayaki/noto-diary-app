@@ -55,3 +55,20 @@
   
   .kb-item-title {
     font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+  
+  .kb-item-body {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.4;
+  }
+  
+  .kb-item-footer {
+    display: flex;
+    margin-top: 5px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+}
