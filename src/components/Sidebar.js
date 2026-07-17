@@ -23,7 +23,7 @@ export default function Sidebar({ page, setPage, goSearch, entries, kb }) {
 
   return (
     <aside className="sidebar">
-      <div className="sb-logo">noto<span>.</span></div>
+      <div className="sb-logo">まなログ<span>.</span></div>
 
       <nav className="sb-nav">
         <div className="sb-label">メニュー</div>
