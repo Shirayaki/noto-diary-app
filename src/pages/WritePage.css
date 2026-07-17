@@ -36,34 +36,6 @@
 .kb-form textarea { resize: none; }
 .kb-link-hint { font-size: 11px; background: #E1F5EE; color: #085041; padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 4px; }
 /* PC（現在） */
-.write-layout {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-}
-
-/* タブレット */
-@media (max-width: 768px) {
-  .write-layout {
-    grid-template-columns: 1fr;
-  }
-  
-  .kb-panel {
-    border-top: 1px solid #e8e8e5;
-    border-left: none;
-  }
-}
-
-/* スマートフォン */
-@media (max-width: 480px) {
-  .write-form {
-    padding: 1rem;
-  }
-  
-  .form-group input,
-  .form-group textarea {
-    font-size: 16px; /* iOS でのズーム防止 */
-  }
-}
 /* Accordion for Mobile */
 @media (max-width: 768px) {
   .write-layout {
@@ -101,3 +73,6 @@
   }
   
   .kb-panel.open .kb-toggle::after {
+    transform: rotate(180deg);
+  }
+}
