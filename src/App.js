@@ -11,7 +11,7 @@ import { useStore } from './hooks/useStore';
 import './App.css';
 
 export default function App() {
-  const [page, setPage] = useState('write');
+  const [page, setPage] = useState('dash');
   const [searchCat, setSearchCat] = useState(null);
   const [toast, setToast] = useState('');
   const { entries, kb } = useStore();
