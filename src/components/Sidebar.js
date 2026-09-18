@@ -28,12 +28,12 @@ export default function Sidebar({ page, setPage, goSearch, entries, kb }) {
       <nav className="sb-nav">
         <div className="sb-label">メニュー</div>
         {[
+          { id: 'dash',  icon: 'ti-chart-bar', label: 'ダッシュボード' },
           { id: 'write', icon: 'ti-edit',      label: '日記を書く' },
           { id: 'list',  icon: 'ti-notebook',  label: '日記一覧' },
           { id: 'search',icon: 'ti-search',    label: '検索・フィルター' },
           { id: 'cal',   icon: 'ti-calendar',  label: 'カレンダー' },
           { id: 'kb',    icon: 'ti-database',  label: '知識DB' },
-          { id: 'dash',  icon: 'ti-chart-bar', label: 'ダッシュボード' },
         ].map(({ id, icon, label }) => (
           <button key={id} className={`sb-item ${page === id ? 'active' : ''}`} onClick={nav(id)}>
             <i className={`ti ${icon}`} />
