@@ -30,3 +30,52 @@ button:focus {
   outline: 2px solid #1D9E75;
   outline-offset: 2px;
 }
+
+/* FAB Button - Floating Action Button */
+.fab-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #1D9E75;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(29, 158, 117, 0.4);
+  transition: all 0.3s ease;
+  z-index: 999;
+  font-size: 24px;
+  border: none;
+  font-weight: bold;
+}
+
+.fab-button:hover {
+  background: #1a8a62;
+  box-shadow: 0 6px 16px rgba(29, 158, 117, 0.6);
+  transform: scale(1.1);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+.fab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .fab-button {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+}
