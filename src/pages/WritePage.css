@@ -2,11 +2,7 @@
   display: grid; 
   grid-template-columns: 1fr 280px; 
   flex: 1; 
-  overflow: hidden;
-  max-width: 850px;  /* ← 追加 */
-  margin: 0 auto;    /* ← 追加（中央寄せ） */
-  width: 100%;       /* ← 追加 */
-  padding: 0 1.5rem; /* ← 追加（左右余白） */
+  overflow: hidden; 
 }
 .write-form { padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; border-right: 1px solid #e8e8e5; }
 .write-header { margin-bottom: .25rem; }
