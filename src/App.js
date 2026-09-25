@@ -14,6 +14,7 @@ export default function App() {
   const [page, setPage] = useState('dash');
   const [searchCat, setSearchCat] = useState(null);
   const [toast, setToast] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);  // ← 追加
   const { entries, kb } = useStore();
 
   const showToast = useCallback((msg) => {
@@ -30,7 +31,24 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar page={page} setPage={setPage} goSearch={goSearch} entries={entries} kb={kb} />
+      {/* ハンバーガーボタン */}
+      <button 
+        className="hamburger-btn" 
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle menu"
+      >
+        ☰
+      </button>
+
+      <Sidebar 
+        page={page} 
+        setPage={setPage} 
+        goSearch={goSearch} 
+        entries={entries} 
+        kb={kb}
+        isOpen={sidebarOpen}  /* ← 追加 */
+        onClose={() => setSidebarOpen(false)}  /* ← 追加 */
+      />
       <div className="app-main">
         {page === 'write'  && <WritePage  {...pageProps} />}
         {page === 'list'   && <ListPage   {...pageProps} />}
@@ -41,11 +59,10 @@ export default function App() {
       </div>
       {toast && <Toast msg={toast} />}
 
-      {/* ← ここに FAB を追加 */}
+      {/* FAB ボタン */}
       <div className="fab-button" onClick={() => setPage('write')}>
         <span className="fab-icon">✏️</span>
       </div>
-      {/* ← ここまで */}
     </div>
   );
 }
