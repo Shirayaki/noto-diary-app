@@ -40,13 +40,6 @@ export default function App() {
         {page === 'dash'   && <DashPage   entries={entries} kb={kb} />}
       </div>
       {toast && <Toast msg={toast} />}
-      <div className="app-container">
-      <Sidebar page={page} setPage={setPage} />
-      <main className="main-content">
-        {/* ページコンテンツ */}
-        {page === 'write' && <WritePage entries={entries} setEntries={setEntries} kb={kb} />}
-        {/* ... その他のページ ... */}
-      </main>
 
       {/* ← ここに FAB を追加 */}
       <div className="fab-button" onClick={() => setPage('write')}>
