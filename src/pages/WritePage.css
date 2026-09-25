@@ -1,6 +1,8 @@
 .write-layout { display: grid; grid-template-columns: 1fr 280px; flex: 1; overflow: hidden; }
 .write-form { padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; border-right: 1px solid 
-#e8e8e5; }
+#e8e8e5;max-width: 850px;  /* ← 追加 */
+  margin: 0 auto;    /* ← 追加（中央寄せ） */
+  width: 100%;       /* ← 追加 */ }
 .write-header { margin-bottom: .25rem; }
 .page-title { font-size: 18px; font-weight: 600; color: #1a1a18; }
 .form-group { display: flex; flex-direction: column; gap: 4px; }
