@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
+import DictionaryCard from '../components/DictionaryCard';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend } from 'chart.js';
 import { CAT_STYLES, MOOD_ICONS, MOODS, dateKey } from '../data/constants';
 import './DashPage.css';
+import '../components/DictionaryCard.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
@@ -96,6 +98,7 @@ export default function DashPage({ entries, kb }) {
           ))}
         </div>
       </div>
+      <DictionaryCard />
     </div>
   );
 }
