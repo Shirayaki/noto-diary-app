@@ -7,8 +7,7 @@
 import React, { useMemo } from 'react';
 import { useStore } from '../hooks/useStore';
 
-export default function DictionaryCard() {
-  const { diaryEntries } = useStore();
+export default function DictionaryCard({ entries }) {
 
   // 設定
   const WORDS_PER_PAGE = 50;      // 1ページあたりの語数
