@@ -1,100 +1,197 @@
-.dictionary-card {
+/* =========================
+   Dictionary Card
+   ========================= */
+
+.dict-card {
   width: 100%;
-  padding: 28px;
-  background: #ffffff;
-  border-radius: 20px;
+  min-height: 150px;
+
   box-sizing: border-box;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+
+  background: #ffffff;
+  border: 1px solid #e8e8e5;
+  border-radius: 10px;
+
+  padding: 28px 36px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 36px;
 }
 
-.dictionary-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+/* =========================
+   Book Icon
+   ========================= */
+
+.dict-book-icon {
+  width: 110px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
 }
 
-.dictionary-card-header {
-  margin-bottom: 12px;
+.dict-book-icon i {
+  font-size: 76px;
+  font-weight: 400;
+
+  color: #111111;
 }
 
-.dictionary-card-title {
-  font-size: 16px;
-  color: #666;
-  font-weight: 500;
+
+/* =========================
+   Common Label
+   ========================= */
+
+.dict-label {
+  font-size: 14px;
+  color: #555555;
+
+  margin-bottom: 8px;
 }
 
-.dictionary-card-main {
+
+/* =========================
+   Page Section
+   ========================= */
+
+.dict-page-section {
+  min-width: 250px;
+}
+
+.dict-page-value {
+  font-size: 42px;
+  line-height: 1.1;
+
+  font-weight: 400;
+
+  color: #111111;
+
+  white-space: nowrap;
+}
+
+.dict-page-value span {
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+
+/* =========================
+   Knowledge Section
+   ========================= */
+
+.dict-knowledge-section {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
+
+  column-gap: 10px;
+  row-gap: 0;
+
+  padding-left: 20px;
 }
 
-.dictionary-card-number {
-  font-size: 52px;
-  line-height: 1;
-  font-weight: 700;
-  color: #222;
-}
-
-.dictionary-card-unit {
-  font-size: 18px;
-  color: #555;
-}
-
-.dictionary-card-info {
-  display: flex;
-  gap: 32px;
-  margin-bottom: 24px;
-}
-
-.dictionary-card-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: #888;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-}
-
-.dictionary-card-progress {
-  margin-bottom: 18px;
-}
-
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: #777;
-}
-
-.progress-bar {
+.dict-knowledge-section .dict-label {
   width: 100%;
-  height: 8px;
-  background: #eeeeee;
-  border-radius: 999px;
-  overflow: hidden;
+  margin-bottom: 8px;
 }
 
-.progress-fill {
-  height: 100%;
-  background: #555;
-  border-radius: 999px;
-  transition: width 0.3s ease;
+.dict-knowledge-value {
+  font-size: 42px;
+  line-height: 1.1;
+
+  font-weight: 400;
+
+  color: #111111;
+
+  white-space: nowrap;
 }
 
-.dictionary-card-note {
-  margin: 0;
+.dict-knowledge-value span {
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+.dict-knowledge-message {
+  font-size: 18px;
+  color: #333333;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   Small Description
+   ========================= */
+
+.dict-sub-text {
+  margin-top: 6px;
+
   font-size: 11px;
-  color: #999;
+  color: #999999;
+}
+
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 768px) {
+  .dict-card {
+    padding: 24px;
+    gap: 24px;
+  }
+
+  .dict-book-icon {
+    width: 80px;
+  }
+
+  .dict-book-icon i {
+    font-size: 60px;
+  }
+
+  .dict-page-value,
+  .dict-knowledge-value {
+    font-size: 34px;
+  }
+
+  .dict-knowledge-message {
+    font-size: 15px;
+  }
+}
+
+
+@media (max-width: 560px) {
+  .dict-card {
+    padding: 20px;
+
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .dict-book-icon {
+    width: 60px;
+  }
+
+  .dict-book-icon i {
+    font-size: 48px;
+  }
+
+  .dict-page-section {
+    min-width: 0;
+  }
+
+  .dict-page-value,
+  .dict-knowledge-value {
+    font-size: 30px;
+  }
+
+  .dict-knowledge-section {
+    padding-left: 0;
+    width: 100%;
+  }
 }
