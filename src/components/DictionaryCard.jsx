@@ -13,95 +13,58 @@ export default function DictionaryCard({ kb = [] }) {
     // 1冊 = 50,000個の知識
     const books = knowledgeCount / ITEMS_PER_BOOK;
 
-    // 現在のページの進捗
-    const currentPageCount = knowledgeCount % ITEMS_PER_PAGE;
-    const pageProgress =
-      (currentPageCount / ITEMS_PER_PAGE) * 100;
-
-    // 現在の本の進捗
-    const bookProgress =
-      (knowledgeCount % ITEMS_PER_BOOK) / ITEMS_PER_BOOK * 100;
-
     return {
       knowledgeCount,
       pages,
       books,
-      currentPageCount,
-      pageProgress,
-      bookProgress,
     };
   }, [kb]);
 
+  // ページ数は、小数1桁まで表示
+  const pageText = stats.pages.toLocaleString('ja-JP', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 1,
+  });
+
   return (
     <div className="dict-card">
-      <div className="dict-header">
-        <span className="dict-icon">📚</span>
-        <h3>辞書に換算すると…</h3>
+
+      {/* 左：本のアイコン */}
+      <div className="dict-book-icon">
+        <i className="ti ti-book" />
       </div>
 
-      <div className="dict-content">
-
-        {/* ページ換算 */}
-        <div className="dict-stat">
-          <div className="dict-label">
-            ページ換算
-          </div>
-
-          <div className="dict-value">
-            {stats.pages.toFixed(1)}ページ
-          </div>
+      {/* 中央：ページ換算 */}
+      <div className="dict-page-section">
+        <div className="dict-label">
+          辞書にすると
         </div>
 
-        {/* 知識数 */}
-        <div className="dict-stat">
-          <div className="dict-label">
-            蓄積した知識
-          </div>
-
-          <div className="dict-value">
-            {stats.knowledgeCount.toLocaleString('ja-JP')}個
-          </div>
+        <div className="dict-page-value">
+          {pageText}<span>ページ</span>
         </div>
 
-        {/* 本換算 */}
-        <div className="dict-stat">
-          <div className="dict-label">
-            本にすると
-          </div>
-
-          <div className="dict-value">
-            {stats.books.toFixed(3)}冊
-          </div>
+        <div className="dict-sub-text">
+          1ページ = 50個の知識
         </div>
-
-        {/* ページ進捗 */}
-        <div className="dict-progress">
-          <div className="dict-progress-text">
-            次の1ページまで
-            <strong>
-              {stats.currentPageCount} / {ITEMS_PER_PAGE}
-            </strong>
-          </div>
-
-          <div className="dict-progress-bar">
-            <div
-              className="dict-progress-fill"
-              style={{
-                width: `${stats.pageProgress}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* 基準 */}
-        <div className="dict-message">
-          <p>
-            1ページ = 50個の知識　｜　
-            1冊 = 50,000個の知識
-          </p>
-        </div>
-
       </div>
+
+      {/* 右：これまでの知識数 */}
+      <div className="dict-knowledge-section">
+        <div className="dict-label">
+          今までで
+        </div>
+
+        <div className="dict-knowledge-value">
+          {stats.knowledgeCount.toLocaleString('ja-JP')}
+          <span>個</span>
+        </div>
+
+        <div className="dict-knowledge-message">
+          の知識を身につけました
+        </div>
+      </div>
+
     </div>
   );
 }
