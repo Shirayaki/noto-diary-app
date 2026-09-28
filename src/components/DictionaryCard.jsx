@@ -1,108 +1,74 @@
-/**
- * DictionaryCard Component
- * DashPage に追加する「辞書換算」セクション
- * 日記の総語数をページ数・冊数で換算して表示
- */
+import React from 'react';
+import './DictionaryCard.css';
 
-import React, { useMemo } from 'react';
+const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_BOOK = 50000;
 
-export default function DictionaryCard({ entries }) {
-  // 設定
-  const WORDS_PER_PAGE = 50;      // 1ページあたりの語数
-  const WORDS_PER_BOOK = 50000;   // 1冊あたりの語数
+const DictionaryCard = ({ knowledge = [], onClick }) => {
+  const knowledgeCount = knowledge.length;
 
-  // 総語数を計算
-  const stats = useMemo(() => {
-    let totalWords = 0;
+  // 辞書換算
+  const pages = knowledgeCount / ITEMS_PER_PAGE;
+  const books = knowledgeCount / ITEMS_PER_BOOK;
 
-    // すべてのエントリのタイトル + 本文の語数をカウント
-    entries.forEach((entry) => {
-      // シンプルな語数カウント（スペース区切り）
-      const titleWords = entry.title ? entry.title.split(/\s+/).length : 0;
-      const bodyWords = entry.body ? entry.body.split(/\s+/).length : 0;
-      totalWords += titleWords + bodyWords;
-    });
-
-    // ページ数・冊数を計算
-    const pages = Math.round(totalWords / WORDS_PER_PAGE);
-    const books = (totalWords / WORDS_PER_BOOK).toFixed(2);
-    const booksWhole = Math.floor(totalWords / WORDS_PER_BOOK);
-    const booksDecimal = totalWords % WORDS_PER_BOOK;
-
-    return {
-      totalWords: totalWords.toLocaleString('ja-JP'),
-      pages,
-      books: parseFloat(books),
-      booksWhole,
-      booksDecimal,
-      booksPercentage: Math.round((booksDecimal / WORDS_PER_BOOK) * 100),
-    };
-  }, [entries]);
+  // 現在のページ内での進捗
+  const pageProgress =
+    ((knowledgeCount % ITEMS_PER_PAGE) / ITEMS_PER_PAGE) * 100;
 
   return (
-    <div className="dict-card">
-      <div className="dict-header">
-        <span className="dict-icon">📚</span>
-        <h3>辞書に換算すると</h3>
+    <div className="dictionary-card" onClick={onClick}>
+      <div className="dictionary-card-header">
+        <span className="dictionary-card-title">
+          辞書に換算すると…
+        </span>
       </div>
 
-      <div className="dict-content">
-        {/* 総語数 */}
-        <div className="dict-stat">
-          <div className="dict-label">総語数</div>
-          <div className="dict-value">{stats.totalWords}語</div>
+      <div className="dictionary-card-main">
+        <span className="dictionary-card-number">
+          {pages.toFixed(1)}
+        </span>
+        <span className="dictionary-card-unit">
+          ページ分
+        </span>
+      </div>
+
+      <div className="dictionary-card-info">
+        <div className="dictionary-card-stat">
+          <span className="stat-label">蓄積した知識</span>
+          <span className="stat-value">
+            {knowledgeCount.toLocaleString()} 個
+          </span>
         </div>
 
-        {/* ページ数 */}
-        <div className="dict-stat">
-          <div className="dict-label">ページ数（50語/ページ）</div>
-          <div className="dict-value">{stats.pages}ページ</div>
-        </div>
-
-        {/* 冊数 */}
-        <div className="dict-stat">
-          <div className="dict-label">冊数（5万語/冊）</div>
-          <div className="dict-value">{stats.books}冊</div>
-        </div>
-
-        {/* 冊数詳細（進捗バー付き） */}
-        {stats.booksWhole > 0 || stats.booksPercentage > 0 ? (
-          <div className="dict-progress">
-            <div className="dict-progress-text">
-              {stats.booksWhole > 0 && (
-                <>
-                  <strong>{stats.booksWhole}冊</strong>と
-                </>
-              )}
-              <strong>{stats.booksPercentage}%</strong>
-            </div>
-            <div className="dict-progress-bar">
-              <div
-                className="dict-progress-fill"
-                style={{ width: `${Math.min(stats.booksPercentage, 100)}%` }}
-              />
-            </div>
-          </div>
-        ) : (
-          <div className="dict-progress">
-            <div className="dict-progress-text">
-              まだ <strong>0%</strong>
-            </div>
-            <div className="dict-progress-bar">
-              <div className="dict-progress-fill" style={{ width: '0%' }} />
-            </div>
-          </div>
-        )}
-
-        {/* メッセージ */}
-        <div className="dict-message">
-          {stats.books >= 1 ? (
-            <p>✨ {stats.booksWhole}冊分の知識を記録しました！</p>
-          ) : (
-            <p>📝 次の冊達成まで頑張りましょう</p>
-          )}
+        <div className="dictionary-card-stat">
+          <span className="stat-label">本にすると</span>
+          <span className="stat-value">
+            {books.toFixed(3)} 冊
+          </span>
         </div>
       </div>
+
+      <div className="dictionary-card-progress">
+        <div className="progress-label">
+          <span>次の1ページまで</span>
+          <span>
+            {knowledgeCount % ITEMS_PER_PAGE} / {ITEMS_PER_PAGE}
+          </span>
+        </div>
+
+        <div className="progress-bar">
+          <div
+            className="progress-fill"
+            style={{ width: `${pageProgress}%` }}
+          />
+        </div>
+      </div>
+
+      <p className="dictionary-card-note">
+        1ページ = 50個の知識　｜　1冊 = 50,000個の知識
+      </p>
     </div>
   );
-}
+};
+
+export default DictionaryCard;
