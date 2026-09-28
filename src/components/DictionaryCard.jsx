@@ -1,74 +1,107 @@
-import React from 'react';
-import './DictionaryCard.css';
+import React, { useMemo } from 'react';
 
 const ITEMS_PER_PAGE = 50;
 const ITEMS_PER_BOOK = 50000;
 
-const DictionaryCard = ({ knowledge = [], onClick }) => {
-  const knowledgeCount = knowledge.length;
+export default function DictionaryCard({ kb = [] }) {
+  const stats = useMemo(() => {
+    const knowledgeCount = kb.length;
 
-  // 辞書換算
-  const pages = knowledgeCount / ITEMS_PER_PAGE;
-  const books = knowledgeCount / ITEMS_PER_BOOK;
+    // 1ページ = 50個の知識
+    const pages = knowledgeCount / ITEMS_PER_PAGE;
 
-  // 現在のページ内での進捗
-  const pageProgress =
-    ((knowledgeCount % ITEMS_PER_PAGE) / ITEMS_PER_PAGE) * 100;
+    // 1冊 = 50,000個の知識
+    const books = knowledgeCount / ITEMS_PER_BOOK;
+
+    // 現在のページの進捗
+    const currentPageCount = knowledgeCount % ITEMS_PER_PAGE;
+    const pageProgress =
+      (currentPageCount / ITEMS_PER_PAGE) * 100;
+
+    // 現在の本の進捗
+    const bookProgress =
+      (knowledgeCount % ITEMS_PER_BOOK) / ITEMS_PER_BOOK * 100;
+
+    return {
+      knowledgeCount,
+      pages,
+      books,
+      currentPageCount,
+      pageProgress,
+      bookProgress,
+    };
+  }, [kb]);
 
   return (
-    <div className="dictionary-card" onClick={onClick}>
-      <div className="dictionary-card-header">
-        <span className="dictionary-card-title">
-          辞書に換算すると…
-        </span>
+    <div className="dict-card">
+      <div className="dict-header">
+        <span className="dict-icon">📚</span>
+        <h3>辞書に換算すると…</h3>
       </div>
 
-      <div className="dictionary-card-main">
-        <span className="dictionary-card-number">
-          {pages.toFixed(1)}
-        </span>
-        <span className="dictionary-card-unit">
-          ページ分
-        </span>
+      <div className="dict-content">
+
+        {/* ページ換算 */}
+        <div className="dict-stat">
+          <div className="dict-label">
+            ページ換算
+          </div>
+
+          <div className="dict-value">
+            {stats.pages.toFixed(1)}ページ
+          </div>
+        </div>
+
+        {/* 知識数 */}
+        <div className="dict-stat">
+          <div className="dict-label">
+            蓄積した知識
+          </div>
+
+          <div className="dict-value">
+            {stats.knowledgeCount.toLocaleString('ja-JP')}個
+          </div>
+        </div>
+
+        {/* 本換算 */}
+        <div className="dict-stat">
+          <div className="dict-label">
+            本にすると
+          </div>
+
+          <div className="dict-value">
+            {stats.books.toFixed(3)}冊
+          </div>
+        </div>
+
+        {/* ページ進捗 */}
+        <div className="dict-progress">
+          <div className="dict-progress-text">
+            次の1ページまで
+            <strong>
+              {stats.currentPageCount} / {ITEMS_PER_PAGE}
+            </strong>
+          </div>
+
+          <div className="dict-progress-bar">
+            <div
+              className="dict-progress-fill"
+              style={{
+                width: `${stats.pageProgress}%`,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* 基準 */}
+        <div className="dict-message">
+          <p>
+            1ページ = 50個の知識　｜　
+            1冊 = 50,000個の知識
+          </p>
+        </div>
+
       </div>
-
-      <div className="dictionary-card-info">
-        <div className="dictionary-card-stat">
-          <span className="stat-label">蓄積した知識</span>
-          <span className="stat-value">
-            {knowledgeCount.toLocaleString()} 個
-          </span>
-        </div>
-
-        <div className="dictionary-card-stat">
-          <span className="stat-label">本にすると</span>
-          <span className="stat-value">
-            {books.toFixed(3)} 冊
-          </span>
-        </div>
-      </div>
-
-      <div className="dictionary-card-progress">
-        <div className="progress-label">
-          <span>次の1ページまで</span>
-          <span>
-            {knowledgeCount % ITEMS_PER_PAGE} / {ITEMS_PER_PAGE}
-          </span>
-        </div>
-
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{ width: `${pageProgress}%` }}
-          />
-        </div>
-      </div>
-
-      <p className="dictionary-card-note">
-        1ページ = 50個の知識　｜　1冊 = 50,000個の知識
-      </p>
     </div>
   );
-};
-
-export default DictionaryCard;
+}
