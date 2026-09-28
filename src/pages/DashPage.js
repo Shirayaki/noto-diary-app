@@ -98,7 +98,7 @@ export default function DashPage({ entries, kb }) {
           ))}
         </div>
       </div>
-      <DictionaryCard entries={entries} />
+     <DictionaryCard kb={kb} />
     </div>
   );
 }
