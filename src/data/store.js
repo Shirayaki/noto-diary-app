@@ -1,5 +1,5 @@
 const DIARY_KEY = 'noto_entries';
-const KB_KEY    = 'noto_kb';
+const KB_KEY = 'noto_kb';
 
 const SEED_ENTRIES = [
   { id: 1, date: '2025-06-04', title: 'プロジェクトのキックオフ', body: '新しいプロジェクトのキックオフを行った。チームメンバーは5人でスプリント計画を立てた。デザインシステムの刷新が主テーマ。', cat: '仕事', tags: ['デザイン', 'React'], mood: '良い' },
@@ -17,28 +17,293 @@ const SEED_ENTRIES = [
 ];
 
 const SEED_KB = [
-  { id: 1, title: 'スプリント計画の進め方', body: 'キックオフ時にチームで見積もりを行い、バックログを整理してから2週間スプリントを回す。', tag: '仕事', linked: 'プロジェクトのキックオフ' },
-  { id: 2, title: 'グライダーと飛行機の比喩', body: '教育によって知識を詰め込まれたグライダー型と自ら思考し飛ぶ飛行機型。思考のプロセスが大切。', tag: '学習', linked: '「思考の整理学」読み始め' },
+  {
+    id: 1,
+    title: 'スプリント計画の進め方',
+    body: 'キックオフ時にチームで見積もりを行い、バックログを整理してから2週間スプリントを回す。',
+    tag: '仕事',
+    linkedEntryId: 1,
+  },
+  {
+    id: 2,
+    title: 'グライダーと飛行機の比喩',
+    body: '教育によって知識を詰め込まれたグライダー型と自ら思考し飛ぶ飛行機型。思考のプロセスが大切。',
+    tag: '学習',
+    linkedEntryId: 2,
+  },
 ];
 
 function load(key, seed) {
-  try { const r = localStorage.getItem(key); return r ? JSON.parse(r) : seed; } catch { return seed; }
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : seed;
+  } catch {
+    return seed;
+  }
 }
+
 function save(key, data) {
-  try { localStorage.setItem(key, JSON.stringify(data)); } catch {}
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch {}
 }
 
 let _entries = load(DIARY_KEY, SEED_ENTRIES);
-let _kb      = load(KB_KEY, SEED_KB);
+let _kb = load(KB_KEY, SEED_KB);
+
+
+/*
+ * 旧バージョンとの互換処理
+ *
+ * 以前：
+ * linked: "プロジェクトのキックオフ"
+ *
+ * 現在：
+ * linkedEntryId: 1
+ *
+ * すでに保存されているユーザーのデータも自動的に移行する。
+ */
+const migratedKB = _kb.map(k => {
+  if (k.linkedEntryId != null) {
+    return k;
+  }
+
+  if (!k.linked) {
+    return k;
+  }
+
+  const linkedEntry = _entries.find(
+    e => e.title === k.linked
+  );
+
+  return {
+    ...k,
+    linkedEntryId: linkedEntry
+      ? linkedEntry.id
+      : null,
+  };
+});
+
+if (
+  JSON.stringify(migratedKB) !==
+  JSON.stringify(_kb)
+) {
+  _kb = migratedKB;
+  save(KB_KEY, _kb);
+}
+
+
 let _listeners = [];
-function notify() { _listeners.forEach(fn => fn()); }
+
+function notify() {
+  _listeners.forEach(fn => fn());
+}
+
+
+function createId(items) {
+  const maxId = items.reduce((max, item) => {
+    const id = Number(item.id);
+
+    return Number.isFinite(id)
+      ? Math.max(max, id)
+      : max;
+  }, 0);
+
+  return Math.max(
+    Date.now(),
+    maxId + 1
+  );
+}
+
 
 export const store = {
-  subscribe(fn) { _listeners.push(fn); return () => { _listeners = _listeners.filter(l => l !== fn); }; },
-  getEntries() { return _entries; },
-  getKB()      { return _kb; },
-  addEntry(entry) { const e = { ...entry, id: Date.now() }; _entries = [e, ..._entries]; save(DIARY_KEY, _entries); notify(); return e; },
-  deleteEntry(id) { _entries = _entries.filter(e => e.id !== id); save(DIARY_KEY, _entries); notify(); },
-  addKB(item) { const k = { ...item, id: Date.now() }; _kb = [k, ..._kb]; save(KB_KEY, _kb); notify(); return k; },
-  deleteKB(id) { _kb = _kb.filter(k => k.id !== id); save(KB_KEY, _kb); notify(); },
+
+  subscribe(fn) {
+    _listeners.push(fn);
+
+    return () => {
+      _listeners =
+        _listeners.filter(l => l !== fn);
+    };
+  },
+
+
+  getEntries() {
+    return _entries;
+  },
+
+
+  getKB() {
+    return _kb;
+  },
+
+
+  getEntryById(id) {
+    return (
+      _entries.find(e => e.id === id) ||
+      null
+    );
+  },
+
+
+  getKBByEntryId(entryId) {
+    return _kb.filter(
+      k => k.linkedEntryId === entryId
+    );
+  },
+
+
+  /*
+   * 新規日記
+   */
+  addEntry(entry) {
+
+    const e = {
+      ...entry,
+      id: createId(_entries),
+    };
+
+    _entries = [
+      e,
+      ..._entries,
+    ];
+
+    save(
+      DIARY_KEY,
+      _entries
+    );
+
+    notify();
+
+    return e;
+  },
+
+
+  /*
+   * 日記編集
+   */
+  updateEntry(id, updates) {
+
+    const index =
+      _entries.findIndex(
+        e => e.id === id
+      );
+
+    if (index === -1) {
+      return null;
+    }
+
+    const current =
+      _entries[index];
+
+    const updated = {
+      ...current,
+      ...updates,
+
+      // IDは絶対に変更しない
+      id: current.id,
+
+      // 元の日付も維持する
+      date: current.date,
+    };
+
+    _entries =
+      _entries.map(e =>
+        e.id === id
+          ? updated
+          : e
+      );
+
+    save(
+      DIARY_KEY,
+      _entries
+    );
+
+    notify();
+
+    return updated;
+  },
+
+
+  /*
+   * 日記削除
+   */
+  deleteEntry(id) {
+
+    _entries =
+      _entries.filter(
+        e => e.id !== id
+      );
+
+    /*
+     * 日記を削除しても
+     * 知識そのものは残す。
+     *
+     * ただし存在しない日記へ
+     * リンクしたままにはしない。
+     */
+    _kb =
+      _kb.map(k =>
+        k.linkedEntryId === id
+          ? {
+              ...k,
+              linkedEntryId: null,
+            }
+          : k
+      );
+
+    save(
+      DIARY_KEY,
+      _entries
+    );
+
+    save(
+      KB_KEY,
+      _kb
+    );
+
+    notify();
+  },
+
+
+  /*
+   * 知識追加
+   */
+  addKB(item) {
+
+    const k = {
+      ...item,
+      id: createId(_kb),
+    };
+
+    _kb = [
+      k,
+      ..._kb,
+    ];
+
+    save(
+      KB_KEY,
+      _kb
+    );
+
+    notify();
+
+    return k;
+  },
+
+
+  deleteKB(id) {
+
+    _kb =
+      _kb.filter(
+        k => k.id !== id
+      );
+
+    save(
+      KB_KEY,
+      _kb
+    );
+
+    notify();
+  },
 };
