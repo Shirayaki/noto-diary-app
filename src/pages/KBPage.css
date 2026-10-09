@@ -150,3 +150,95 @@
     flex-wrap: wrap;
   }
 }
+
+
+/* 知識編集フォーム */
+.kb-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.kb-edit-form h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a18;
+}
+
+.kb-edit-form label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+.kb-edit-form input,
+.kb-edit-form textarea,
+.kb-edit-form select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: #1a1a18;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.kb-edit-form textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.kb-edit-form input:focus,
+.kb-edit-form textarea:focus,
+.kb-edit-form select:focus {
+  outline: none;
+  border-color: #1D9E75;
+}
+
+.kb-edit-form .form-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 編集ボタン */
+.kb-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.kb-edit-btn:hover {
+  background: #E1F5EE;
+  color: #1D9E75;
+}
+
+/* スマホ対応 */
+@media (max-width: 768px) {
+  .kb-edit-form input,
+  .kb-edit-form textarea,
+  .kb-edit-form select {
+    font-size: 16px;
+  }
+
+  .kb-edit-btn {
+    width: 36px;
+    height: 36px;
+  }
+}

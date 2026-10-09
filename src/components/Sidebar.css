@@ -27,3 +27,12 @@
 .sb-stat span { color: #888; display: flex; align-items: center; gap: 4px; }
 .sb-stat span i { font-size: 13px; }
 .sb-stat strong { color: #1a1a18; }
+
+
+.sb-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+

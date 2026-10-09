@@ -17,20 +17,8 @@ const SEED_ENTRIES = [
 ];
 
 const SEED_KB = [
-  {
-    id: 1,
-    title: 'スプリント計画の進め方',
-    body: 'キックオフ時にチームで見積もりを行い、バックログを整理してから2週間スプリントを回す。',
-    tag: '仕事',
-    linkedEntryId: 1,
-  },
-  {
-    id: 2,
-    title: 'グライダーと飛行機の比喩',
-    body: '教育によって知識を詰め込まれたグライダー型と自ら思考し飛ぶ飛行機型。思考のプロセスが大切。',
-    tag: '学習',
-    linkedEntryId: 2,
-  },
+  { id: 1, title: 'スプリント計画の進め方', body: 'キックオフ時にチームで見積もりを行い、バックログを整理してから2週間スプリントを回す。', tag: '仕事', linkedEntryId: 1 },
+  { id: 2, title: 'グライダーと飛行機の比喩', body: '教育によって知識を詰め込まれたグライダー型と自ら思考し飛ぶ飛行機型。思考のプロセスが大切。', tag: '学習', linkedEntryId: 2 },
 ];
 
 function load(key, seed) {
@@ -43,267 +31,113 @@ function load(key, seed) {
 }
 
 function save(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data));
-  } catch {}
+  try { localStorage.setItem(key, JSON.stringify(data)); } catch { }
+}
+
+function createId(items) {
+  const maxId = items.reduce((max, item) => {
+    const id = Number(item.id);
+    return Number.isFinite(id) ? Math.max(max, id) : max;
+  }, 0);
+  return Math.max(Date.now(), maxId + 1);
 }
 
 let _entries = load(DIARY_KEY, SEED_ENTRIES);
 let _kb = load(KB_KEY, SEED_KB);
 
-
-/*
- * 旧バージョンとの互換処理
- *
- * 以前：
- * linked: "プロジェクトのキックオフ"
- *
- * 現在：
- * linkedEntryId: 1
- *
- * すでに保存されているユーザーのデータも自動的に移行する。
- */
-const migratedKB = _kb.map(k => {
-  if (k.linkedEntryId != null) {
-    return k;
-  }
-
-  if (!k.linked) {
-    return k;
-  }
-
-  const linkedEntry = _entries.find(
-    e => e.title === k.linked
-  );
-
-  return {
-    ...k,
-    linkedEntryId: linkedEntry
-      ? linkedEntry.id
-      : null,
-  };
+// 旧データ linked: "日記タイトル" → linkedEntryId: 日記ID へ自動移行
+const migratedKB = _kb.map(item => {
+  if (item.linkedEntryId != null || !item.linked) return item;
+  const linkedEntry = _entries.find(entry => entry.title === item.linked);
+  const { linked, ...rest } = item;
+  return { ...rest, linkedEntryId: linkedEntry ? linkedEntry.id : null };
 });
 
-if (
-  JSON.stringify(migratedKB) !==
-  JSON.stringify(_kb)
-) {
+if (JSON.stringify(migratedKB) !== JSON.stringify(_kb)) {
   _kb = migratedKB;
   save(KB_KEY, _kb);
 }
 
-
 let _listeners = [];
-
-function notify() {
-  _listeners.forEach(fn => fn());
-}
-
-
-function createId(items) {
-  const maxId = items.reduce((max, item) => {
-    const id = Number(item.id);
-
-    return Number.isFinite(id)
-      ? Math.max(max, id)
-      : max;
-  }, 0);
-
-  return Math.max(
-    Date.now(),
-    maxId + 1
-  );
-}
-
+function notify() { _listeners.forEach(fn => fn()); }
 
 export const store = {
-
   subscribe(fn) {
     _listeners.push(fn);
-
-    return () => {
-      _listeners =
-        _listeners.filter(l => l !== fn);
-    };
+    return () => { _listeners = _listeners.filter(listener => listener !== fn); };
   },
 
+  getEntries() { return _entries; },
+  getKB() { return _kb; },
+  getEntryById(id) { return _entries.find(entry => entry.id === id) || null; },
+  getKBByEntryId(entryId) { return _kb.filter(item => item.linkedEntryId === entryId); },
 
-  getEntries() {
-    return _entries;
-  },
-
-
-  getKB() {
-    return _kb;
-  },
-
-
-  getEntryById(id) {
-    return (
-      _entries.find(e => e.id === id) ||
-      null
-    );
-  },
-
-
-  getKBByEntryId(entryId) {
-    return _kb.filter(
-      k => k.linkedEntryId === entryId
-    );
-  },
-
-
-  /*
-   * 新規日記
-   */
   addEntry(entry) {
-
-    const e = {
-      ...entry,
-      id: createId(_entries),
-    };
-
-    _entries = [
-      e,
-      ..._entries,
-    ];
-
-    save(
-      DIARY_KEY,
-      _entries
-    );
-
+    const newEntry = { ...entry, id: createId(_entries) };
+    _entries = [newEntry, ..._entries];
+    save(DIARY_KEY, _entries);
     notify();
-
-    return e;
+    return newEntry;
   },
 
-
-  /*
-   * 日記編集
-   */
   updateEntry(id, updates) {
-
-    const index =
-      _entries.findIndex(
-        e => e.id === id
-      );
-
-    if (index === -1) {
-      return null;
-    }
-
-    const current =
-      _entries[index];
+    const current = _entries.find(entry => entry.id === id);
+    if (!current) return null;
 
     const updated = {
       ...current,
       ...updates,
-
-      // IDは絶対に変更しない
       id: current.id,
-
-      // 元の日付も維持する
       date: current.date,
     };
 
-    _entries =
-      _entries.map(e =>
-        e.id === id
-          ? updated
-          : e
-      );
+    _entries = _entries.map(entry => entry.id === id ? updated : entry);
+    save(DIARY_KEY, _entries);
+    notify();
+    return updated;
+  },
 
-    save(
-      DIARY_KEY,
-      _entries
+  deleteEntry(id) {
+    _entries = _entries.filter(entry => entry.id !== id);
+    // 日記を削除しても知識は残し、リンクだけ解除する
+    _kb = _kb.map(item => item.linkedEntryId === id ? { ...item, linkedEntryId: null } : item);
+    save(DIARY_KEY, _entries);
+    save(KB_KEY, _kb);
+    notify();
+  },
+
+  addKB(item) {
+    const newItem = { ...item, id: createId(_kb) };
+    _kb = [newItem, ..._kb];
+    save(KB_KEY, _kb);
+    notify();
+    return newItem;
+  },
+
+
+  updateKB(id, updates) {
+    const current = _kb.find(item => item.id === id);
+    if (!current) return null;
+
+    const updated = {
+      ...current,
+      ...updates,
+      id: current.id,
+    };
+
+    _kb = _kb.map(item =>
+      item.id === id ? updated : item
     );
 
+    save(KB_KEY, _kb);
     notify();
-
     return updated;
   },
 
 
-  /*
-   * 日記削除
-   */
-  deleteEntry(id) {
-
-    _entries =
-      _entries.filter(
-        e => e.id !== id
-      );
-
-    /*
-     * 日記を削除しても
-     * 知識そのものは残す。
-     *
-     * ただし存在しない日記へ
-     * リンクしたままにはしない。
-     */
-    _kb =
-      _kb.map(k =>
-        k.linkedEntryId === id
-          ? {
-              ...k,
-              linkedEntryId: null,
-            }
-          : k
-      );
-
-    save(
-      DIARY_KEY,
-      _entries
-    );
-
-    save(
-      KB_KEY,
-      _kb
-    );
-
-    notify();
-  },
-
-
-  /*
-   * 知識追加
-   */
-  addKB(item) {
-
-    const k = {
-      ...item,
-      id: createId(_kb),
-    };
-
-    _kb = [
-      k,
-      ..._kb,
-    ];
-
-    save(
-      KB_KEY,
-      _kb
-    );
-
-    notify();
-
-    return k;
-  },
-
-
   deleteKB(id) {
-
-    _kb =
-      _kb.filter(
-        k => k.id !== id
-      );
-
-    save(
-      KB_KEY,
-      _kb
-    );
-
+    _kb = _kb.filter(item => item.id !== id);
+    save(KB_KEY, _kb);
     notify();
   },
 };

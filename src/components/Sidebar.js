@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { CAT_STYLES, CATEGORIES, dateKey } from '../data/constants';
 import './Sidebar.css';
 
-export default function Sidebar({ 
-  page, 
-  setPage, 
-  goSearch, 
-  entries, 
+export default function Sidebar({
+  page,
+  setPage,
+  goSearch,
+  entries,
   kb,
   isOpen,    // ← 追加
   onClose    // ← 追加
@@ -43,23 +43,40 @@ export default function Sidebar({
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
 
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <div className="sb-logo">まなログ<span>.</span></div>
+
+        <div className="sb-logo">
+          <img
+            src="/SVG/koto_log.svg"
+            alt="ことログ"
+            className="sb-logo-img"
+          />
+        </div>
+
 
         <nav className="sb-nav">
           <div className="sb-label">メニュー</div>
+
           {[
-            { id: 'dash',  icon: 'ti-chart-bar', label: 'ダッシュボード' },
-            { id: 'write', icon: 'ti-edit',      label: '日記を書く' },
-            { id: 'list',  icon: 'ti-notebook',  label: '日記一覧' },
-            { id: 'search',icon: 'ti-search',    label: '検索・フィルター' },
-            { id: 'cal',   icon: 'ti-calendar',  label: 'カレンダー' },
-            { id: 'kb',    icon: 'ti-database',  label: '知識DB' },
+            { id: 'dash', icon: 'ダッシュボード.svg', label: 'ダッシュボード' },
+            { id: 'write', icon: '日記を書く.svg', label: '日記を書く' },
+            { id: 'list', icon: '日記一覧.svg', label: '日記一覧' },
+            { id: 'search', icon: '検索・フィルター.svg', label: '検索・フィルター' },
+            { id: 'kb', icon: '知識DB.svg', label: '知識DB' },
           ].map(({ id, icon, label }) => (
-            <button key={id} className={`sb-item ${page === id ? 'active' : ''}`} onClick={nav(id)}>
-              <i className={`ti ${icon}`} />
+            <button
+              key={id}
+              className={`sb-item ${page === id ? 'active' : ''}`}
+              onClick={nav(id)}
+            >
+              <img
+                src={`/SVG/${icon}`}
+                alt=""
+                className="sb-icon"
+              />
               {label}
             </button>
           ))}
+
         </nav>
 
         <div className="sb-nav">
