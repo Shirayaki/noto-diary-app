@@ -57,7 +57,7 @@ export default function Sidebar({
           <div className="sb-label">メニュー</div>
 
           {[
-            { id: 'dash', icon: 'ダッシュボード.svg?v=2', label: 'ダッシュボード' },
+           { id: 'dash', icon: 'ダッシュボード.svg', label: 'ダッシュボード' },
             { id: 'write', icon: '日記を書く.svg', label: '日記を書く' },
             { id: 'list', icon: '日記一覧.svg', label: '日記一覧' },
             { id: 'search', icon: '検索・フィルター.svg', label: '検索・フィルター' },
@@ -68,11 +68,18 @@ export default function Sidebar({
               className={`sb-item ${page === id ? 'active' : ''}`}
               onClick={nav(id)}
             >
-              <img
-                src={`/SVG/${icon}`}
-                alt=""
-                className="sb-icon"
-              />
+             
+           <img
+            src={id === 'dash'
+            ? '/SVG/ダッシュボード.svg'
+            : `/SVG/${icon}`}
+             alt=""
+            className="sb-icon"
+            onError={(e) => {
+            console.error('画像読み込み失敗:', e.currentTarget.src);
+             }}
+            />
+
               {label}
             </button>
           ))}
