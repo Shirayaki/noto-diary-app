@@ -140,3 +140,23 @@ button:focus {
   }
 }
 
+
+/* スマホ：ハンバーガーメニューと見出しの重なりを防止 */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    top: 8px;
+    left: 8px;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-main {
+    padding-top: 60px;
+    box-sizing: border-box;
+    min-height: 0;
+  }
+}
